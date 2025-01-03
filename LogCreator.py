@@ -12,7 +12,8 @@ class LogCreator:
     ASTERISK: str = '*'
     HASH: str = '#'
     NOTHING: str = ''
-    SLEEP_TIME: int | float = 2
+    SLEEP_TIME: int | float = 1
+    ANSWERS = ['y', 'n']
 
     def hello_message(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -44,7 +45,7 @@ class LogCreator:
     def get_valid_input(self, prompt: str):
         while True:
             answer: str = input(prompt).lower()
-            if answer in ['y', 'n']:
+            if answer in self.ANSWERS:
                 return answer
             else:
                 logging.error("Invalid input. Please press 'y' or 'n'. ")
@@ -66,9 +67,15 @@ class LogCreator:
                 self.COMMENTS.append(comment)
 
     def generate_git_commit_command(self, comments: list[str]):
+        git_command = "git commit"
+
+        title = self.get_title()
+        if title != 0:
+            git_command += title
+
         logging.info("Generating 'git commit' code, Please wait ...")
         self.sleep(self.SLEEP_TIME)
-        git_command = "git commit"
+
         msgs = []
         for index, comment in enumerate(comments):
             if comment.startswith(self.HASH):
@@ -86,6 +93,15 @@ class LogCreator:
 
     def sleep(self, _time: int | float):
         time.sleep(_time)
+
+    def get_title(self):
+        logging.info("Do you want to add a title to this commit? (y|n)")
+        answer = self.get_valid_input(self.PROMPT)
+        if answer == 'y':
+            logging.info('Write your title: ')
+            return f' -m "Title: {input(self.PROMPT)}." -m "More details:"'
+        else:
+            return 0
 
 
 if __name__ == '__main__':
