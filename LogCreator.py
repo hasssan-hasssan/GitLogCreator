@@ -7,18 +7,19 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] - %(message)s')
 
 
 class LogCreator:
-    COMMENTS: list[str] = []
-    PROMPT: str = '> '
-    ASTERISK: str = '*'
-    HASH: str = '#'
-    NOTHING: str = ''
-    SLEEP_TIME: int | float = 1
-    ANSWERS = ['y', 'n']
+    COMMENTS: list[str] = []  # Initialize an empty list to store comments
+    PROMPT: str = '> '  # Define the prompt string
+    ASTERISK: str = '*'  # Define the asterisk symbol
+    HASH: str = '#'  # Define the hash symbol
+    NOTHING: str = ''  # Define an empty string
+    SLEEP_TIME: int | float = 1  # Define the sleep time in seconds
+    ANSWERS = ['y', 'n']  # Define acceptable answers
 
     def hello_message(self):
+        # Clear the terminal screen
         os.system('cls' if os.name == 'nt' else 'clear')
         self.sleep(self.SLEEP_TIME)
-        logging.info('Hello! welcome to Log Creator.')
+        logging.info('Hello! Welcome to Log Creator.')
         self.sleep(self.SLEEP_TIME)
         logging.info(
             "Write your comments and hit enter. When you're done, type 'end' and press enter.")
@@ -37,20 +38,22 @@ class LogCreator:
             logging.info(
                 "Great! Start writing your messages and remember to follow the structure.")
             if self.get_comments(self.PROMPT) == 'done':
-                if self.validate_comments(self.COMMENTS) != 0:
+                if self.validate_comments(self.COMMENTS):
                     self.generate_git_commit_command(self.COMMENTS)
         else:
             logging.info("See you later.")
 
-    def get_valid_input(self, prompt: str):
+    def get_valid_input(self, prompt: str) -> str:
+        # Get valid input from the user
         while True:
             answer: str = input(prompt).lower()
             if answer in self.ANSWERS:
                 return answer
             else:
-                logging.error("Invalid input. Please press 'y' or 'n'. ")
+                logging.error("Invalid input. Please press 'y' or 'n'.")
 
-    def validate_comments(self, comments: list[str]):
+    def validate_comments(self, comments: list[str]) -> bool:
+        # Validate the comments list
         if not comments:
             logging.info(
                 "Why you didn't write any comments, You broke my heart :(")
@@ -59,7 +62,8 @@ class LogCreator:
             self.COMMENTS = [comment for comment in self.COMMENTS if comment]
             return True
 
-    def get_comments(self, prompt: str):
+    def get_comments(self, prompt: str) -> str:
+        # Collect comments from the user
         while True:
             comment: str = input(prompt)
             if comment == 'end':
@@ -68,6 +72,7 @@ class LogCreator:
                 self.COMMENTS.append(comment)
 
     def generate_git_commit_command(self, comments: list[str]):
+        # Generate the git commit command
         git_command = "git commit"
 
         title = self.get_title()
@@ -89,13 +94,15 @@ class LogCreator:
                 msgs.append(f'{comment}')
         if msgs:
             msgs = ', '.join(msgs)
-            git_command += f'-m "{msgs}"'
+            git_command += f' -m "{msgs}"'
         logging.info(f'Here you go (just copy that): {git_command}')
 
     def sleep(self, _time: int | float):
+        # Sleep for the specified time
         time.sleep(_time)
 
-    def get_title(self):
+    def get_title(self) -> str:
+        # Get the commit title from the user
         logging.info("Do you want to add a title to this commit? (y|n)")
         answer = self.get_valid_input(self.PROMPT)
         if answer == 'y':
@@ -106,5 +113,6 @@ class LogCreator:
 
 
 if __name__ == '__main__':
+    # Create an instance of LogCreator and call the hello_message method
     log_creator = LogCreator()
     log_creator.hello_message()
