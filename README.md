@@ -30,7 +30,7 @@ Log Creator is a simple and interactive Python tool designed to help you generat
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/log-creator.git
+   git clone https://github.com/hasssan-hasssan/GitLogCreator.git
    ```
 2. Navigate to the project directory:
    ```sh
