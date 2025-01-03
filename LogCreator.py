@@ -54,9 +54,10 @@ class LogCreator:
         if not comments:
             logging.info(
                 "Why you didn't write any comments, You broke my heart :(")
-            return 0
+            return False
         else:
             self.COMMENTS = [comment for comment in self.COMMENTS if comment]
+            return True
 
     def get_comments(self, prompt: str):
         while True:
